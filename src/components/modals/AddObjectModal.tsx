@@ -39,9 +39,6 @@ export const AddObjectModal: React.FC<AddObjectModalProps> = ({ isOpen, onClose,
         </div>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center text-2xl">
-            {emoji || '📦'}
-          </div>
           <input
             type="text"
             value={emoji}
