@@ -74,26 +74,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onAddObject }) => {
       <SavingsCard savings={savings} />
 
       {/* Tabs */}
-      <div className="flex items-center justify-between bg-white dark:bg-slate-800 rounded-full p-1 shadow-sm mb-5">
+      <div className="bg-white dark:bg-slate-800 rounded-full p-1 shadow-sm mb-5">
         <div className="flex gap-1">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
-              filter === 'all'
+            className={`flex-1 px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${filter === 'all'
                 ? 'bg-blue-600 text-white shadow'
                 : 'text-slate-500 dark:text-slate-400'
-            }`}
+              }`}
           >
             <Package className="w-4 h-4" />
             Tous
           </button>
           <button
             onClick={() => setFilter('affordable')}
-            className={`px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
-              filter === 'affordable'
+            className={`flex-1 px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${filter === 'affordable'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'text-slate-500 dark:text-slate-400'
-            }`}
+              }`}
           >
             <CheckCircle className="w-4 h-4" />
             Achetables
@@ -134,7 +132,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onAddObject }) => {
       {/* Modals */}
       <AddObjectModal
         isOpen={false}
-        onClose={() => {}}
+        onClose={() => { }}
         onAdd={handleAddObject}
       />
 
