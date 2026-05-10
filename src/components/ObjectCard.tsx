@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { WishObject } from '../types';
-import { Clock, CheckCircle } from 'lucide-react';
+import { Clock, CheckCircle, X, Edit, Trash2 } from 'lucide-react';
 
 interface ObjectCardProps {
   object: WishObject;
@@ -16,6 +16,7 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
 
   const [translateX, setTranslateX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const startX = useRef(0);
   const isHorizontal = useRef(false);
 
@@ -28,7 +29,7 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const deltaX = e.touches[0].clientX - startX.current;
-    
+
     if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(e.touches[0].clientY - startX.current)) {
       isHorizontal.current = true;
       e.preventDefault();
@@ -40,8 +41,10 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
   const handleTouchEnd = () => {
     if (isHorizontal.current) {
       if (translateX < -80) {
-        onDelete();
+        // Swipe gauche = supprimer (avec confirmation)
+        setShowConfirmDelete(true);
       } else if (translateX > 80) {
+        // Swipe droite = modifier
         onEdit();
       }
     }
@@ -67,10 +70,10 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         style={{ transform: `translateX(${translateX}px)` }}
-        className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-md border border-slate-100 dark:border-slate-700 transition-transform"
+        className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-md border border-slate-100 dark:border-slate-700 transition-transform duration-200 ease-out"
       >
         {/* Progress bar */}
-        <div 
+        <div
           className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-400 opacity-20 rounded-3xl transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
@@ -98,6 +101,43 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
           </div>
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      {showConfirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Trash2 className="w-8 h-8 text-red-600 dark:text-red-400" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
+                Confirmer la suppression
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                Êtes-vous sûr de vouloir supprimer "{object.name}" ?
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirmDelete(false)}
+                className="flex-1 py-3 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  onDelete();
+                  setShowConfirmDelete(false);
+                }}
+                className="flex-1 py-3 rounded-full bg-red-600 text-white font-semibold"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
