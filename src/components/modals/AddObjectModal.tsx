@@ -38,15 +38,13 @@ export const AddObjectModal: React.FC<AddObjectModalProps> = ({ isOpen, onClose,
           </button>
         </div>
 
-        <div className="flex items-center gap-3 mb-4">
-          <input
-            type="text"
-            value={emoji}
-            onChange={(e: any) => setEmoji(e.target.value.slice(0, 2))}
-            placeholder="Emoji"
-            className="flex-1 px-4 py-3 rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        <input
+          type="text"
+          value={emoji}
+          onChange={(e: any) => setEmoji(e.target.value.slice(0, 2))}
+          placeholder="Emoji"
+          className="flex-1 px-4 py-3 rounded-full border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
         <input
           type="text"

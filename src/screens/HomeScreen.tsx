@@ -7,7 +7,7 @@ import { EditObjectModal } from '../components/modals/EditObjectModal';
 import { MoneyModal } from '../components/modals/MoneyModal';
 import { Toast } from '../components/Toast';
 import { WishObject } from '../types';
-import { Coins, Package, CheckCircle } from 'lucide-react';
+import { Coins, Package, CheckCircle, Wallet } from 'lucide-react';
 
 type FilterType = 'all' | 'affordable';
 
@@ -63,8 +63,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onAddObject }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pb-24 px-4 pt-5">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-800 to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-300 flex items-center justify-center gap-2">
+      <div className="text-left mb-6">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-800 to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-300 flex items-center justify-start gap-2">
+          <Wallet className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           Monee
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Gérez vos économies</p>
@@ -79,8 +80,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onAddObject }) => {
           <button
             onClick={() => setFilter('all')}
             className={`flex-1 px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${filter === 'all'
-                ? 'bg-blue-600 text-white shadow'
-                : 'text-slate-500 dark:text-slate-400'
+              ? 'bg-blue-600 text-white shadow'
+              : 'text-slate-500 dark:text-slate-400'
               }`}
           >
             <Package className="w-4 h-4" />
@@ -89,8 +90,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onAddObject }) => {
           <button
             onClick={() => setFilter('affordable')}
             className={`flex-1 px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${filter === 'affordable'
-                ? 'bg-emerald-600 text-white shadow'
-                : 'text-slate-500 dark:text-slate-400'
+              ? 'bg-emerald-600 text-white shadow'
+              : 'text-slate-500 dark:text-slate-400'
               }`}
           >
             <CheckCircle className="w-4 h-4" />
