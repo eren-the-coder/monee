@@ -29,6 +29,7 @@ declare module 'lucide-react' {
   const Clock: any;
   const Wallet: any;
   const Search: any;
+  const MoreVertical: any;
   export {
     Plus,
     CheckCircle,
@@ -60,5 +61,6 @@ declare module 'lucide-react' {
     Clock,
     Wallet,
     Search,
+    MoreVertical,
   };
 }

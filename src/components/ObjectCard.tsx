@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { WishObject } from '../types';
-import { Clock, CheckCircle, X, Edit, Trash2 } from 'lucide-react';
+import { Clock, CheckCircle, Edit, Trash2, MoreVertical } from 'lucide-react';
 
 interface ObjectCardProps {
   object: WishObject;
@@ -13,94 +13,117 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
   const progress = object.price > 0 ? Math.min(100, Math.max(0, (savings / object.price) * 100)) : 0;
   const canBuy = savings >= object.price;
   const missing = object.price - savings;
-
-  const [translateX, setTranslateX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const startX = useRef(0);
-  const isHorizontal = useRef(false);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    startX.current = e.touches[0].clientX;
-    setIsDragging(true);
-    isHorizontal.current = false;
+  const handleCardClick = () => {
+    setShowMenu(true);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const deltaX = e.touches[0].clientX - startX.current;
-
-    if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(e.touches[0].clientY - startX.current)) {
-      isHorizontal.current = true;
-      e.preventDefault();
-      const limited = Math.max(-120, Math.min(120, deltaX));
-      setTranslateX(limited);
-    }
+  const handleEdit = () => {
+    setShowMenu(false);
+    onEdit();
   };
 
-  const handleTouchEnd = () => {
-    if (isHorizontal.current) {
-      if (translateX < -80) {
-        // Swipe gauche = supprimer (avec confirmation)
-        setShowConfirmDelete(true);
-      } else if (translateX > 80) {
-        // Swipe droite = modifier
-        onEdit();
-      }
-    }
-    setTranslateX(0);
-    setIsDragging(false);
+  const handleDeleteClick = () => {
+    setShowMenu(false);
+    setShowConfirmDelete(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete();
+    setShowConfirmDelete(false);
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl mb-4">
-      {/* Background actions */}
-      <div className="absolute inset-0 flex">
-        <div className="flex-1 bg-red-500 flex items-center pl-4">
-          <span className="text-white font-medium">Supprimer</span>
-        </div>
-        <div className="flex-1 bg-amber-500 flex items-center justify-end pr-4">
-          <span className="text-white font-medium">Modifier</span>
-        </div>
-      </div>
-
-      {/* Card */}
-      <div
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ transform: `translateX(${translateX}px)` }}
-        className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-md border border-slate-100 dark:border-slate-700 transition-transform duration-200 ease-out"
-      >
-        {/* Progress bar */}
+    <>
+      <div className="relative overflow-hidden rounded-3xl mb-4">
+        {/* Progress bar background */}
         <div
           className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-400 opacity-20 rounded-3xl transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
 
-        <div className="relative flex items-center p-4 gap-4">
-          <div className="w-14 h-14 bg-blue-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
-            {object.emoji || '📦'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-bold text-slate-800 dark:text-white text-lg truncate">{object.name}</div>
-            <div className="inline-block bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold mt-1">
-              {object.price.toLocaleString('fr-FR')} FCFA
+        {/* Card */}
+        <div
+          onClick={handleCardClick}
+          className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-md border border-slate-100 dark:border-slate-700 cursor-pointer active:scale-[0.98] transition-transform duration-150"
+        >
+          <div className="relative flex items-center p-4 gap-4">
+            <div className="w-14 h-14 bg-blue-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
+              {object.emoji || '📦'}
             </div>
-            {!canBuy ? (
-              <div className="text-xs text-orange-500 mt-1 flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                <span>Manque {missing.toLocaleString('fr-FR')} FCFA</span>
+            <div className="flex-1 min-w-0">
+              <div className="font-bold text-slate-800 dark:text-white text-lg truncate">{object.name}</div>
+              <div className="inline-block bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold mt-1">
+                {object.price.toLocaleString('fr-FR')} FCFA
               </div>
-            ) : (
-              <div className="text-xs text-emerald-500 mt-1 flex items-center gap-1">
-                <CheckCircle className="w-3 h-3" />
-                <span>Achetable !</span>
-              </div>
-            )}
+              {!canBuy ? (
+                <div className="text-xs text-orange-500 mt-1 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  <span>Manque {missing.toLocaleString('fr-FR')} FCFA</span>
+                </div>
+              ) : (
+                <div className="text-xs text-emerald-500 mt-1 flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" />
+                  <span>Achetable !</span>
+                </div>
+              )}
+            </div>
+            <div className="flex-shrink-0">
+              <MoreVertical className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Menu Contextuel */}
+      {showMenu && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+            onClick={() => setShowMenu(false)}
+          />
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl animate-slide-up">
+            <div className="p-6">
+              <div className="text-center mb-4">
+                <div className="w-12 h-1 bg-slate-200 dark:bg-slate-600 rounded-full mx-auto mb-6" />
+                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">
+                  {object.name}
+                </h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
+                  {object.price.toLocaleString('fr-FR')} FCFA
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleEdit}
+                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                >
+                  <span>Modifier</span>
+                  <Edit className="w-5 h-5" />
+                </button>
+
+                <button
+                  onClick={handleDeleteClick}
+                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                >
+                  <span>Supprimer</span>
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowMenu(false)}
+                className="w-full mt-6 py-3 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Confirmation Dialog */}
       {showConfirmDelete && (
@@ -126,10 +149,7 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
                 Annuler
               </button>
               <button
-                onClick={() => {
-                  onDelete();
-                  setShowConfirmDelete(false);
-                }}
+                onClick={handleConfirmDelete}
                 className="flex-1 py-3 rounded-full bg-red-600 text-white font-semibold"
               >
                 Supprimer
@@ -138,6 +158,20 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
           </div>
         </div>
       )}
-    </div>
+
+      <style jsx>{`
+        @keyframes slide-up {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s ease-out;
+        }
+      `}</style>
+    </>
   );
 };
