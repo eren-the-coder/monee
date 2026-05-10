@@ -84,7 +84,7 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
             className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
             onClick={() => setShowMenu(false)}
           />
-          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl animate-slide-up">
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl" style={{ animation: 'slide-up 0.3s ease-out' }}>
             <div className="p-6">
               <div className="text-center mb-4">
                 <div className="w-12 h-1 bg-slate-200 dark:bg-slate-600 rounded-full mx-auto mb-6" />
@@ -159,7 +159,8 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
         </div>
       )}
 
-      <style jsx>{`
+      {/* Animation styles inline dans une balise style normale */}
+      <style>{`
         @keyframes slide-up {
           from {
             transform: translateY(100%);
@@ -167,9 +168,6 @@ export const ObjectCard: React.FC<ObjectCardProps> = ({ object, savings, onDelet
           to {
             transform: translateY(0);
           }
-        }
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
         }
       `}</style>
     </>
